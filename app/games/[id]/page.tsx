@@ -45,13 +45,13 @@ export default async function GamePage({ params }: { params: { id: string } }) {
       <Header />
       <div className="container mx-auto px-4 py-12">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-          <div className="relative h-96 rounded-lg overflow-hidden">
+          <div className="relative h-150 rounded-lg overflow-hidden">
             <Image
               src={game.image_url}
               alt={game.name}
               fill
               className="object-cover"
-              sizes="(max-width: 768px) 100vw, 50vw"
+              sizes="(max-width: 720px) 100vw, 50vw"
               priority
             />
           </div>

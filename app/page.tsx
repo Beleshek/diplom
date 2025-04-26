@@ -17,14 +17,25 @@ interface Game {
 }
 
 
-export default async function Home() {
-  const games = await getGames();
+export default async function Home({
+  searchParams,
+}: {
+  searchParams?: { category?: string };
+}) {
+  const selectedCategory = searchParams?.category || '';
+  const games = await getGames(selectedCategory);
   const categories = await getCategories();
 
-  async function getGames(): Promise<Game[]> {
+  async function getGames(category?: string): Promise<Game[]> {
     try {
-      const stmt = db.prepare('SELECT * FROM games LIMIT 8');
-      const games = stmt.all() as Game[];
+      const query = category 
+        ? 'SELECT * FROM games WHERE category = ? LIMIT 8'
+        : 'SELECT * FROM games LIMIT 8';
+      
+      const stmt = db.prepare(query);
+      const games = category 
+        ? stmt.all(category) 
+        : stmt.all() as Game[];
 
       return games.map(g => ({
         ...g,
@@ -46,6 +57,7 @@ export default async function Home() {
       return [];
     }
   }
+
   return (
     <div className="bg-gray-900 min-h-screen text-gray-100">
       <Header />
@@ -56,21 +68,33 @@ export default async function Home() {
             <Search />
             <h3 className="text-xl font-bold mb-4 text-blue-400">Жанры</h3>
             <ul className="space-y-2">
+              <li>
+                <Link 
+                  href="/" 
+                  className={`w-full text-left hover:text-blue-300 transition-colors ${!selectedCategory ? 'text-blue-400' : 'text-gray-300'}`}
+                >
+                  Все игры
+                </Link>
+              </li>
               {categories.map((category) => (
                 <li key={category}>
-                  <button className="w-full text-left hover:text-blue-300 transition-colors">
+                  <Link
+                    href={`/?category=${encodeURIComponent(category)}`}
+                    className={`w-full text-left hover:text-blue-300 transition-colors ${selectedCategory === category ? 'text-blue-400' : 'text-gray-300'}`}
+                  >
                     {category}
-                  </button>
+                  </Link>
                 </li>
               ))}
             </ul>
           </div>
         </div>
 
+
         {/* Основной контент */}
         <div className="flex-1">
           <section className="mb-12">
-            <h2 className="text-3xl font-bold mb-6 text-white">Популярные игры</h2>
+            <h2 className="text-3xl font-bold mb-6 text-white">Игры</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {games.map((game) => (
                 <Link href={`/games/${game.id}`} key={game.id} className="bg-gray-800 rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow hover:transform hover:scale-105 duration-300">
@@ -80,7 +104,7 @@ export default async function Home() {
                       alt={game.name}
                       fill
                       className="object-cover"
-                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                      sizes="(max-width: 400px) 100vw, (max-width: 1000px) 50vw, 33vw"
                     />
                   </div>
                   <div className="p-4">

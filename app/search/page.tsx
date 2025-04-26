@@ -1,23 +1,42 @@
 import Header from "@/components/header";
-import {Search} from "@/components/search-bar";
+import { Search } from "@/components/search-bar";
+import { GameCard } from "@/components/game-card";
 import db from "@/lib/db";
+import Link from 'next/link';
+
+interface Game {
+  id: number;
+  name: string;
+  description: string;
+  price: number;
+  image_url: string;
+  category: string;
+  min_players?: number;
+  max_players?: number;
+  play_time?: number;
+}
 
 export default async function SearchPage({
   searchParams,
 }: {
-  searchParams: { query?: string };
+  searchParams?: { query?: string };
 }) {
-  const searchQuery = searchParams.query || "";
+  const searchQuery = searchParams?.query || "";
   const games = await searchGames(searchQuery);
 
-  async function searchGames(query: string) {
+  async function searchGames(query: string): Promise<Game[]> {
     try {
       const stmt = db.prepare(`
         SELECT * FROM games 
-        WHERE name LIKE ? OR description LIKE ?
+        WHERE name LIKE ? OR description LIKE ? OR category LIKE ?
         LIMIT 8
       `);
-      return stmt.all(`%${query}%`, `%${query}%`);
+      const results = stmt.all(`%${query}%`, `%${query}%`, `%${query}%`) as Game[];
+      
+      return results.map(game => ({
+        ...game,
+        price: parseFloat(game.price.toString())
+      }));
     } catch (error) {
       console.error('Search error:', error);
       return [];
@@ -35,12 +54,24 @@ export default async function SearchPage({
         {/* Результаты поиска */}
         {games.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {/* Рендерим найденные игры */}
+            {games.map((game) => (
+              <GameCard key={game.id} game={game} />
+            ))}
+          </div>
+        ) : searchQuery ? (
+          <div className="text-center py-12">
+            <p className="text-gray-400 text-lg mb-4">По запросу "{searchQuery}" игры не найдены</p>
+            <Link 
+              href="/" 
+              className="text-blue-400 hover:text-blue-300 transition-colors"
+            >
+              Вернуться к популярным играм
+            </Link>
           </div>
         ) : (
-          <p className="text-center text-gray-400">
-            {searchQuery ? "Игры не найдены" : "Введите поисковый запрос"}
-          </p>
+          <div className="text-center py-12">
+            <p className="text-gray-400 text-lg">Введите название игры, жанр или описание</p>
+          </div>
         )}
       </div>
     </div>

@@ -13,10 +13,10 @@ export default function Header() {
           Игровой Магазин
         </Link>
         <nav className="flex items-center space-x-6">
-          <Link href="/" className="hover:text-blue-500">
+          <Link href="/" className="text-black hover:text-blue-500">
             Главная
           </Link>
-          <Link href="/products" className="hover:text-blue-500">
+          <Link href="/products" className="text-black hover:text-blue-500">
             Игры
           </Link>
           {status === "authenticated" ? (
@@ -31,7 +31,7 @@ export default function Header() {
             </>
           ) : (
             <>
-              <Link href="api/loging/signin" className="hover:text-blue-500">
+              <Link href="api/loging/signin" className=" text-black hover:text-blue-500">
                 Вход
               </Link>
               <Link

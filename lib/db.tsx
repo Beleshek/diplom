@@ -41,8 +41,10 @@ if (!dbExists) {
       ('Монополия', 'Классическая настольная игра', 1999.99, '/images/monopoly.jpg', 'Стратегия', 2, 6, 60),
       ('Колонизаторы', 'Развивайте свои поселения', 1499.99, '/images/catan.jpg', 'Стратегия', 3, 4, 90),
       ('Мафия', 'Детективная психологическая игра', 799.99, '/images/mafia.jpg', 'Партийная', 4, 12, 30),
-      ('Манчкин', 'Приключенческая игра про подземелья', 1000, '/images/munchkin.jpg', 'Приключенческая', 4, 12, 30),
-      ('Astra Militarum Army Set: Death Korps of Krieg', 'Приключенческая игра про подземелья', 29990, '/images/ig1.jpg', 'Warhammer 40000', 2, 4, 60);
+      ('Imperial Knights: Knight Questoris', 'Воплощение чести, власти и богатства', 19990, '/images/knight.jpg', 'Warhammer 40000', 2, 4, 60),
+      ('Замес: Комбинация монстров', 'Волки, кровососы, разъярённая толпа!', 1000, '/images/zames.jpg', 'Замес', 4, 12, 30),
+      ('Замес', 'Пираты, ниндзя, динозавры, роботы, инопланетяне', 2000, '/images/zames1.jpg', 'Замес', 4, 12, 30),
+      ('Astra Militarum Army Set: Death Korps of Krieg', 'Варгейм', 29990, '/images/ig1.jpg', 'Warhammer 40000', 2, 4, 60);
   `);
 
   console.log("Database created and initialized with sample data");
