@@ -1,13 +1,20 @@
-'use client';
-import { SessionProvider } from 'next-auth/react';
+"use client";
 
-export function Providers({ children }: { children: React.ReactNode }) {
+import { SessionProvider } from "next-auth/react";
+import { CartProvider } from "@/context/cart-context";
+
+export function Providers({ 
+  children,
+  session 
+}: { 
+  children: React.ReactNode;
+  session: any;
+}) {
   return (
-    <SessionProvider
-      refetchInterval={5 * 60}
-      refetchOnWindowFocus={false}
-    >
-      {children}
+    <SessionProvider session={session}>
+      <CartProvider>
+        {children}
+      </CartProvider>
     </SessionProvider>
   );
 }

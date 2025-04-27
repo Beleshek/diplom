@@ -1,8 +1,9 @@
-import Header from "@/components/header";
+import  Header  from "@/components/header";
 import Image from "next/image";
 import db from "@/lib/db";
 import { Search } from "@/components/search-bar";
 import Link from 'next/link';
+import { AddToCartButton } from "@/components/cart-button";
 
 interface Game {
   id: number;
@@ -22,19 +23,20 @@ export default async function Home({
 }: {
   searchParams?: { category?: string };
 }) {
-  const selectedCategory = searchParams?.category || '';
+  const selectedCategory = (await searchParams)?.category || '';
   const games = await getGames(selectedCategory);
   const categories = await getCategories();
 
+
   async function getGames(category?: string): Promise<Game[]> {
     try {
-      const query = category 
+      const query = category
         ? 'SELECT * FROM games WHERE category = ? LIMIT 8'
         : 'SELECT * FROM games LIMIT 8';
-      
+
       const stmt = db.prepare(query);
-      const games = category 
-        ? stmt.all(category) 
+      const games = category
+        ? stmt.all(category)
         : stmt.all() as Game[];
 
       return games.map(g => ({
@@ -69,8 +71,8 @@ export default async function Home({
             <h3 className="text-xl font-bold mb-4 text-blue-400">Жанры</h3>
             <ul className="space-y-2">
               <li>
-                <Link 
-                  href="/" 
+                <Link
+                  href="/"
                   className={`w-full text-left hover:text-blue-300 transition-colors ${!selectedCategory ? 'text-blue-400' : 'text-gray-300'}`}
                 >
                   Все игры
@@ -117,9 +119,9 @@ export default async function Home({
                         <span> {game.play_time} мин</span>
                       </div>
                     )}
-                    <button className="mt-4 w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded transition-colors">
-                      В корзину
-                    </button>
+                    <div className="p-4">
+                      <AddToCartButton game={game} />
+                    </div>
                   </div>
                 </Link>
               ))}

@@ -3,6 +3,12 @@ import Credentials from "next-auth/providers/credentials";
 import  db  from "@/lib/db";
 import bcrypt from "bcryptjs";
 
+interface User {
+  id: number;
+  email: string;
+  password: string;
+  name?: string; 
+}
 export const authOptions = {
   providers: [
     Credentials({

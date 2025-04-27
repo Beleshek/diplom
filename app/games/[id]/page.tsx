@@ -2,6 +2,7 @@ import db from "@/lib/db";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import Header from "@/components/header";
+import { AddToCartButton } from "@/components/cart-button";
 
 interface Game {
   id: number;
@@ -26,9 +27,9 @@ export default async function GamePage({ params }: { params: { id: string } }) {
     try {
       const stmt = db.prepare('SELECT * FROM games WHERE id = ?');
       const game = stmt.get(id) as Game | undefined;
-      
+
       if (!game) return null;
-      
+
       return {
         ...game,
         price: parseFloat(game.price.toString())
@@ -40,7 +41,7 @@ export default async function GamePage({ params }: { params: { id: string } }) {
   }
 
   return (
-    
+
     <div className="bg-gray-900 min-h-screen text-gray-100">
       <Header />
       <div className="container mx-auto px-4 py-12">
@@ -51,15 +52,15 @@ export default async function GamePage({ params }: { params: { id: string } }) {
               alt={game.name}
               fill
               className="object-cover"
-              sizes="(max-width: 720px) 100vw, 50vw"
+              sizes="(max-width: 100px) 100vw, 50vw"
               priority
             />
           </div>
-          
+
           <div>
             <h1 className="text-4xl font-bold text-white mb-4">{game.name}</h1>
             <p className="text-blue-400 text-2xl font-bold mb-6">{game.price.toFixed(2)} ₽</p>
-            
+
             <div className="flex gap-4 mb-6">
               {game.min_players && game.max_players && (
                 <span className="bg-gray-800 px-3 py-1 rounded-full text-sm">
@@ -75,12 +76,12 @@ export default async function GamePage({ params }: { params: { id: string } }) {
                 {game.category}
               </span>
             </div>
-            
+
             <p className="text-gray-300 mb-8">{game.description}</p>
-            
-            <button className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg transition-colors">
-              Добавить в корзину
-            </button>
+
+            <div className="p-4">
+              <AddToCartButton game={game} />
+            </div>
           </div>
         </div>
       </div>
