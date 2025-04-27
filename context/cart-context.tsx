@@ -1,6 +1,7 @@
 "use client";
 
 import { createContext, useContext, useEffect, useState } from "react";
+import { useSession } from "next-auth/react";
 
 interface CartItem {
   gameId: number;
@@ -25,9 +26,10 @@ interface CartContextType {
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export function CartProvider({ children }: { children: React.ReactNode }) {
+  const { data: session } = useSession();
   const [items, setItems] = useState<CartItem[]>([]);
   const [isLoaded, setIsLoaded] = useState(false);
-
+  
 // Это загрузка из local.storege
   useEffect(() => {
     const savedCart = localStorage.getItem("cart");
@@ -36,13 +38,19 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     }
     setIsLoaded(true);
   }, []);
-
-  // Сохранение корзины 
+ 
   useEffect(() => {
     if (isLoaded) {
       localStorage.setItem("cart", JSON.stringify(items));
     }
   }, [items, isLoaded]);
+
+  useEffect(() => {
+    if (!session && isLoaded) { // Добавляем проверку isLoaded
+      setItems([]);
+      localStorage.removeItem("cart");
+    }
+  }, [session, isLoaded]);
 
   const addItem = (game: {
     id: number;

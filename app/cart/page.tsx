@@ -4,6 +4,7 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useCart } from "@/context/cart-context";
 import Image from "next/image";
+import  Header  from "@/components/header";
 
 export default function CartPage() {
   const { data: session } = useSession();
@@ -30,6 +31,8 @@ export default function CartPage() {
   const total = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
   return (
+    <div className="bg-gray-900 min-h-screen">
+      <Header />
     <div className="bg-gray-100 min-h-screen py-8">
       <div className="container mx-auto px-4">
         <h1 className="text-3xl font-bold mb-8">Корзина</h1>
@@ -100,6 +103,7 @@ export default function CartPage() {
           </div>
         )}
       </div>
+    </div>
     </div>
   );
 }

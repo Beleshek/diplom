@@ -31,8 +31,8 @@ export default async function Home({
   async function getGames(category?: string): Promise<Game[]> {
     try {
       const query = category
-        ? 'SELECT * FROM games WHERE category = ? LIMIT 8'
-        : 'SELECT * FROM games LIMIT 8';
+        ? 'SELECT * FROM games WHERE category = ? LIMIT 10'
+        : 'SELECT * FROM games LIMIT 10';
 
       const stmt = db.prepare(query);
       const games = category
@@ -96,7 +96,7 @@ export default async function Home({
         {/* Основной контент */}
         <div className="flex-1">
           <section className="mb-12">
-            <h2 className="text-3xl font-bold mb-6 text-white">Игры</h2>
+            <h2 className="text-3xl font-bold mb-6 text-white">Игры и модели</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {games.map((game) => (
                 <Link href={`/games/${game.id}`} key={game.id} className="bg-gray-800 rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow hover:transform hover:scale-105 duration-300">

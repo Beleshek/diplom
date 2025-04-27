@@ -18,7 +18,7 @@ export default async function handler(
     const stmt = db.prepare('SELECT * FROM games ORDER BY created_at DESC LIMIT ?');
     const games = stmt.all();
     
-    console.log('Fetched games:', games); // Логируем данные
+    console.log('Fetched games:', games); 
     
     res.status(200).json({
       games: games.map(g => ({
